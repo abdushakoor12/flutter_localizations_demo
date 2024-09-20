@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localizations_demo/localizations/app_localizations.dart';
+
+final localeNotifier = ValueNotifier(const Locale('en'));
 
 void main() {
   runApp(const MyApp());
@@ -9,13 +13,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Localizations Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(),
+    return ListenableBuilder(
+      listenable: localeNotifier,
+      builder: (context, child) {
+        return MaterialApp(
+          title: 'Localizations Demo',
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            AppLocalizations.delegate,
+          ],
+          debugShowCheckedModeBanner: false,
+          locale: localeNotifier.value,
+          supportedLocales: localeToLocalizations.keys,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+            useMaterial3: true,
+          ),
+          home: const MyHomePage(),
+        );
+      },
     );
   }
 }
@@ -40,15 +58,29 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text("Counter App"),
+        title: Text(context.loc.appTitle),
+        actions: [
+          PopupMenuButton<Locale>(
+            onSelected: (locale) {
+              localeNotifier.value = locale;
+            },
+            itemBuilder: (context) {
+              return localeToLocalizations.entries.map((entry) {
+                return PopupMenuItem<Locale>(
+                  value: entry.key,
+                  child: Text(entry.key.languageCode),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            Text(
+              context.loc.youHavePushedTheButtonThisManyTimes(_counter),
             ),
             Text(
               '$_counter',
@@ -59,8 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        label: const Text('Increment'),
+        tooltip: context.loc.increment,
+        label: Text(context.loc.increment),
         icon: const Icon(Icons.add),
       ),
     );
