@@ -1,3 +1,5 @@
+## [🌐 Web Demo](https://abdushakoor12.github.io/flutter_localizations_demo/)
+
 ### Adding a new language
 
 To add a new language, make a class that extends `AppLocalizations`, override the getters and add it to the `localeToLocalizations` map in `app_localizations.dart`.
