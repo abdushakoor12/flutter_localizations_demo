@@ -6,3 +6,13 @@ class ItalianLocalizations extends AppLocalizations {
   /// Italian translations
 }
 ```
+
+and then
+```dart
+Map<Locale, AppLocalizations> localeToLocalizations = {
+  const Locale('en'): const EnglishLocalizations(),
+  const Locale('es'): const SpanishLocalizations(),
+  const Locale('fr'): const FrenchLocalizations(),
+  /// add your new language here
+  const Locale('it'): const ItalianLocalizations(),
+};
